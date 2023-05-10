@@ -86,7 +86,7 @@ test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 # $$
 
 
-from models.CNN_Net import Net
+from models.All_Conv import Net
 
 # 實例化模型、損失函數和優化器
 model = Net().to(device)
