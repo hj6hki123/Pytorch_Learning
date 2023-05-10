@@ -75,7 +75,6 @@ train_loader = DataLoader(train_data, batch_size=batch_size,
 # 測試集
 test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 
-
 # # 載入數據
 # train_dataset = datasets.ImageFolder(root='F:\pycharm_pro\pytorch_learn\my_images', transform=transform)
 # train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -86,87 +85,8 @@ test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 # W_{new} = {W_{o} - Kernelsize + (2 \times Padding) \over Stride} +1
 # $$
 
-# In[125]:
 
-
-# 定義模型
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.layer1 = nn.Sequential(  # <-- (1,32,32)
-            nn.Conv2d(1, 16, kernel_size=3, padding=1),  # --> (32,32,32)
-            nn.BatchNorm2d(16),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))  # --> (16,16,16)
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(16, 32, kernel_size=3, padding=1),  # --> (32,16,16)
-            nn.BatchNorm2d(32),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))  # --> (32,8,8)
-        self.layer3 = nn.Sequential(
-            nn.Conv2d(32, 64, kernel_size=3, padding=1),  # --> (64,8,8)
-            nn.BatchNorm2d(64),
-            nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))  # --> (64,4,4)
-        self.fc1 = nn.Sequential(
-            nn.Linear(4 * 4 * 64, 256),  # --> (256)
-            nn.Dropout(0.2),
-            nn.Sigmoid(),
-        )
-        self.fc2 = nn.Linear(256, num_classes)
-
-    def forward(self, x):
-        out = self.layer1(x)
-        out = self.layer2(out)
-        out = self.layer3(out)
-        out = out.view(out.size(0), -1)
-        out = self.fc1(out)
-        out = self.fc2(out)
-        return out
-
-
-# In[126]:
-
-
-# 定義模型
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-
-        self.fc1 = nn.Sequential(
-            nn.Linear(32 * 32, 1024),
-            nn.BatchNorm1d(1024),
-            nn.LeakyReLU(0.2, inplace=True)
-        )
-        self.fc2 = nn.Sequential(
-            nn.Linear(1024, 512),
-            nn.BatchNorm1d(512),
-            nn.LeakyReLU(0.2, inplace=True)
-        )
-        self.fc3 = nn.Sequential(
-            nn.Linear(512, 256),
-            nn.BatchNorm1d(256),
-            nn.LeakyReLU(0.2, inplace=True)
-        )
-        self.fc4 = nn.Sequential(
-            nn.Linear(256, 128),
-            nn.BatchNorm1d(128),
-            nn.LeakyReLU(0.2, inplace=True)
-        )
-        self.fc5 = nn.Linear(128, num_classes)
-
-    def forward(self, x):
-        out = x.view(x.size(0), -1)
-        out = self.fc1(out)
-        out = self.fc2(out)
-        out = self.fc3(out)
-        out = self.fc4(out)
-        out = self.fc5(out)
-        return out
-
-
-# In[127]:
-
+from models.CNN_Net import Net
 
 # 實例化模型、損失函數和優化器
 model = Net().to(device)
@@ -266,7 +186,6 @@ torch.save(model, '50on_model_all.pt')
 
 import torch
 from torchvision import transforms
-import torchvision.models as models
 from PIL import Image
 
 # 定義圖片轉換
